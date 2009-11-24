@@ -57,11 +57,7 @@ formula * junction_iterator_formula(junctionIterator it){
 	return it->formula;
 }
 
-
-
-
 void free_formula(formula *form){
-	junctionIterator it,itb;
 	switch( form->type ){
 		case CONSTANT:
 		case VARIABLE:
@@ -72,14 +68,17 @@ void free_formula(formula *form){
 			free(form);
 			return ;
 		case JUNCTION:
-			it=junction_iterator_get(form);
-			while( junction_iterator_valid(it) ){
-				free_formula(junction_iterator_formula(it));
-				itb=junction_iterator_next(it);
-				free(it);
-				it=itb;
-			}
+			free_junction_parts(form);
 			free(form);
+	}
+}
+void free_junction_parts(formula *form){
+	junctionIterator itb,it=junction_iterator_get(form);
+	while( junction_iterator_valid(it) ){
+		free_formula(junction_iterator_formula(it));
+		itb=junction_iterator_next(it);
+		free(it);
+		it=itb;
 	}
 }
 
@@ -121,6 +120,50 @@ char is_valid_junctor(junctor j){
 	}
 	return 0;
 }
-char test_formula(formula* form){
-
+int junction_contains(formula* junction,formula* needle){
+	junctionIterator it=junction_iterator_get(junction);
+	while( junction_iterator_valid(it) ){
+		if( compare_formula(needle,junction_iterator_formula(it)) ){
+			return 1;
+		}
+		it=junction_iterator_next(it);
+	}
+	return 0;
 }
+
+int compare_formula(formula* a,formula* b){
+	junctionIterator it;
+	if( a->type != b->type ){
+		return 0;
+	}
+	switch( a->type ){
+		case CONSTANT:
+			return !a->data.constant == !b->data.constant;
+		case VARIABLE:
+			return a->data.variable == b->data.variable;
+		case NEGATION:
+			return compare_formula(a->data.negation.inner,b->data.negation.inner);
+		case JUNCTION:
+			if( a->data.junction.junctor != b->data.junction.junctor ){
+				return 0;
+			}
+			it=junction_iterator_get(a);
+			while( junction_iterator_valid(it) ){
+				if( !junction_contains(b,junction_iterator_formula(it)) ){
+					return 0;
+				}
+				it=junction_iterator_next(it);
+			}
+			it=junction_iterator_get(b);
+			while( junction_iterator_valid(it) ){
+				if( !junction_contains(a,junction_iterator_formula(it)) ){
+					return 0;
+				}
+				it=junction_iterator_next(it);
+			}
+			return 1;
+	}
+	return 0;
+}
+
+

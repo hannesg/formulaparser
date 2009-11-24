@@ -3,10 +3,11 @@
 #include "formula.h"
 #include "io.h"
 #include "nf.h"
+#include "simplify.h"
 
 int main(int argc,char ** argv){
-	parserResult *result=string_to_formula_parser("(-(A0>A1)=A2)");
-	formula *nnfo=nnf(result->formula);
+	parserResult *result=string_to_formula_parser("(A1*(A2=A3)*(A2|A3))");//
+	formula *nnfo=simplify(result->formula);
 	free_formula(result->formula);
 	free(result);
 	char *out=(char*) malloc(required_string_length(nnfo));

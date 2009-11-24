@@ -77,4 +77,10 @@ junctor get_junctor(char str);
 
 char is_valid_junctor(junctor j);
 
+int compare_formula(formula* a,formula* b);
+
+int junction_contains(formula* junction,formula* needle);
+
+void free_junction_parts(formula *form);
+
 #endif /* FORMULA_H_ */
