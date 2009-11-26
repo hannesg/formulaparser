@@ -137,6 +137,7 @@ formula* simplify(formula* form){
 			}
 			return result;
 	}
+	return new_constant_formula(0);
 }
 
 int add_formula_to_junction_with_simplification(formula* junction,formula* form){

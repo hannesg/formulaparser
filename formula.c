@@ -104,6 +104,7 @@ formula* clone_formula(formula *form){
 			}
 			return result;
 	}
+	return new_constant_formula(0);
 }
 
 junctor get_junctor(char str){
@@ -287,4 +288,5 @@ formula * remove_abbreviations(formula * form){
 					return result;
 			}
 		}
+	return new_constant_formula(0);
 }

@@ -19,12 +19,12 @@ int main(int argc,char ** argv){
 
 	printf("%s",out);*/
 
-/*	if( argc == 1 ){
+	if( argc == 1 ){
 		printf("Benutzung: %s <formel>\n",argv[0]);
 		return 0;
-	}else{*/
+	}else{
 		// testen des ersten Arguments
-		result=string_to_formula_parser("(-(A0>A1)=A2)");
+		result=string_to_formula_parser(argv[1]);
 		if( result->error || *(result->rest) != 0 ){
 			// es ist keine Formel!
 			int pos=result->rest-argv[1];
@@ -39,30 +39,31 @@ int main(int argc,char ** argv){
 
 		current=remove_abbreviations(old);
 		free(old);
-		printf("no abbr: ");
+		printf("Ohne Abkürzungen: ");
 		print_simplified(current);
 		printf("\n");
 		old=current;
 
 		current=nnf(old);
-		printf("nnf: ");
+		printf("NNF: ");
 		print_simplified(current);
 		printf("\n");
-
+		free_formula(current);
 
 		current=dnf(old);
-		printf("dnf: ");
+		printf("DNF: ");
 		print_simplified(current);
 		printf("\n");
+		free_formula(current);
 
 		current=knf(old);
-		printf("knf: ");
+		printf("KNF: ");
 		print_simplified(current);
 		printf("\n");
-
+		free_formula(current);
 
 		free(result);
 
 		return 0;
-	//}
+	}
 }
