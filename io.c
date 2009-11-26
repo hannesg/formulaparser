@@ -129,3 +129,10 @@ int formula_to_string(formula* form,char *out){
 	}
 	return 0;
 }
+void print_simplified(formula *form){
+	formula * simplified=simplify(form);
+	char * out=(char *)malloc(required_string_length(simplified));
+	formula_to_string(simplified,out);
+	printf("%s",out);
+	free(simplified);
+}

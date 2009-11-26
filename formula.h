@@ -83,4 +83,6 @@ int junction_contains(formula* junction,formula* needle);
 
 void free_junction_parts(formula *form);
 
+formula * remove_abbreviations(formula *form);
+
 #endif /* FORMULA_H_ */

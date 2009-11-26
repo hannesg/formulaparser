@@ -166,4 +166,125 @@ int compare_formula(formula* a,formula* b){
 	return 0;
 }
 
+formula * remove_abbreviations(formula * form){
+	formula* inner,*result,*temp;
+	junctionIterator it;
+	switch( form->type ){
+		case CONSTANT:
+		case VARIABLE:
+			return clone_formula(form);
+		case NEGATION:
+			inner=remove_abbreviations(form->data.negation.inner);
+			return new_negation_formula(inner);
+		case JUNCTION:
+			switch( form->data.junction.junctor ){
+				case AND:
+				case OR:
+					result=new_junction_formula(form->data.junction.junctor);
+					it=junction_iterator_get(form);
+					while( junction_iterator_valid(it) ){
+						add_formula_to_junction(
+								result,
+								remove_abbreviations(junction_iterator_formula(it)));
+						it=junction_iterator_next(it);
+					}
+					return result;
+				case IMPLICATION:
+					result=new_junction_formula(OR);
+					it=junction_iterator_get(form);
+					if( junction_iterator_valid(it) ){
+						inner=new_negation_formula(junction_iterator_formula(it));
+						add_formula_to_junction(
+								result,
+								remove_abbreviations(inner));
+						free(inner);
+						it=junction_iterator_next(it);
+					}
+					if( junction_iterator_valid(it) ){
+						add_formula_to_junction(
+								result,
+								remove_abbreviations(junction_iterator_formula(it)));
+						it=junction_iterator_next(it);
+					}
+					return result;
+				case XOR:
+					result=new_junction_formula(OR);
+					it=junction_iterator_get(form);
+					temp=new_junction_formula(AND);
+					if( junction_iterator_valid(it) ){
+						inner=new_negation_formula(junction_iterator_formula(it));
+						add_formula_to_junction(
+								temp,
+								remove_abbreviations(inner));
+						free(inner);
+						it=junction_iterator_next(it);
+					}
+					if( junction_iterator_valid(it) ){
+						add_formula_to_junction(
+								temp,
+								remove_abbreviations(junction_iterator_formula(it)));
+						it=junction_iterator_next(it);
+					}
+					add_formula_to_junction(result,temp);
 
+
+					it=junction_iterator_get(form);
+					temp=new_junction_formula(AND);
+					if( junction_iterator_valid(it) ){
+						add_formula_to_junction(
+								temp,
+								remove_abbreviations(junction_iterator_formula(it)));
+						it=junction_iterator_next(it);
+					}
+					if( junction_iterator_valid(it) ){
+						inner=new_negation_formula(junction_iterator_formula(it));
+						add_formula_to_junction(
+								temp,
+								remove_abbreviations(inner));
+						free(inner);
+					}
+					add_formula_to_junction(result,temp);
+
+					return result;
+				case EQUIVALENT:
+					result=new_junction_formula(OR);
+					it=junction_iterator_get(form);
+					temp=new_junction_formula(AND);
+					if( junction_iterator_valid(it) ){
+						add_formula_to_junction(
+								temp,
+								remove_abbreviations(junction_iterator_formula(it)));
+						it=junction_iterator_next(it);
+					}
+					if( junction_iterator_valid(it) ){
+						add_formula_to_junction(
+								temp,
+								remove_abbreviations(junction_iterator_formula(it)));
+						it=junction_iterator_next(it);
+					}
+					add_formula_to_junction(result,temp);
+
+
+					it=junction_iterator_get(form);
+					temp=new_junction_formula(AND);
+					if( junction_iterator_valid(it) ){
+						inner=new_negation_formula(junction_iterator_formula(it));
+						add_formula_to_junction(
+								temp,
+								remove_abbreviations(inner));
+						free(inner);
+						it=junction_iterator_next(it);
+					}
+					if( junction_iterator_valid(it) ){
+						inner=new_negation_formula(junction_iterator_formula(it));
+						add_formula_to_junction(
+								temp,
+								remove_abbreviations(inner));
+						free(inner);
+					}
+					add_formula_to_junction(result,temp);
+
+					return result;
+			}
+		}
+}
