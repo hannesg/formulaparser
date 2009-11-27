@@ -210,12 +210,6 @@ formula *nf(formula *form,junctor junctor){
 	junctionIterator it;
 	formula *temp,*result,*oldResult;
 	form=nnf(form);
-/*	if( junctor == AND ){
-		out=(char *)malloc(required_string_length(form));
-		formula_to_string(form,out);
-		printf("now: %s\n",out);
-		free(out);
-	}*/
 	switch( form->type ){
 		case CONSTANT :
 		case VARIABLE :

@@ -13,7 +13,6 @@
 #include <malloc.h>
 
 #include "formula.h"
-#include "simplify.h"
 
 typedef struct _parserResult {
 	formula* formula;
@@ -23,7 +22,7 @@ typedef struct _parserResult {
 
 parserResult *string_to_formula_parser(char* str);
 
-int required_string_length(formula* form);
+int formula_required_string_length(formula* form);
 
 int formula_to_string(formula* form,char *out);
 

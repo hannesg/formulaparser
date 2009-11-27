@@ -64,7 +64,7 @@ parserResult *string_to_formula_parser(char* str){
 	result->rest=str;
 	return result;
 }
-int required_string_length(formula* form){
+int formula_required_string_length(formula* form){
 	junctionIterator it;
 	int result=1;
 	switch( form->type ){
@@ -78,14 +78,14 @@ int required_string_length(formula* form){
 				return 2;
 			}
 		case NEGATION :
-			return required_string_length(form->data.negation.inner)+1;
+			return formula_required_string_length(form->data.negation.inner)+1;
 		case JUNCTION :
 			it=junction_iterator_get(form);
 			while( junction_iterator_valid(it) ){
-				result+=required_string_length(junction_iterator_formula(it));
+				result+=formula_required_string_length(junction_iterator_formula(it));
 				it=junction_iterator_next(it);
 			}
-			result+=form->data.junction.size;
+			result+=form->data.junction.size+1;
 			return result;
 	}
 	return 0;
@@ -116,6 +116,9 @@ int formula_to_string(formula* form,char *out){
 			out[0]='(';
 			offset=0;
 			it=junction_iterator_get(form);
+			if( !junction_iterator_valid(it) ){
+				offset++;
+			}
 			while( junction_iterator_valid(it) ){
 				offset++;
 				offset+=formula_to_string(junction_iterator_formula(it),out+offset);
@@ -128,11 +131,4 @@ int formula_to_string(formula* form,char *out){
 			return offset;
 	}
 	return 0;
-}
-void print_simplified(formula *form){
-	formula * simplified=simplify(form);
-	char * out=(char *)malloc(required_string_length(simplified));
-	formula_to_string(simplified,out);
-	printf("%s",out);
-	free(simplified);
 }
