@@ -34,12 +34,18 @@ inline int is_wwb(wwb *w);
 
 int wwb_get(wwb * wwb,variable var);
 
-void wwb_set(wwb * w,variable var,int value);
+inline void wwb_set(wwb * w,variable var,int value);
+
+inline void wwb_set_and_lock(wwb * w,variable var,int value);
 
 wwb * wwb_from_formula(formula * form);
 
-int eval_formula(formula * form,wwb * wwb);
+int formula_evaluate(formula * form,wwb * wwb);
+
+formula* formula_evaluate_partially(formula * form,wwb * wwb);
 
 wwb* wwb_successor(wwb *w,int *carry);
+
+void wwb_copy_to(wwb* from,wwb* to);
 
 #endif /* WWB_H_ */

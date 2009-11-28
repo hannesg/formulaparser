@@ -8,12 +8,14 @@
 #include "io/simplify.h"
 #include "io/wwb.h"
 
+#include "verifiable/dpll.h"
+
 int main(int argc,char ** argv){
 	formula *current,*old;
 	parserResult *result;
 	wwb* wwb,* oldWwb;
 	char *out;
-	int carry=0;
+	int verifiable=0,carry=0;
 	char *example="(A2+(A1=A3)+-(A0*A4))";
 
 	if( argc == 1 ){
@@ -60,19 +62,27 @@ int main(int argc,char ** argv){
 	printf("\n");
 	free_formula(current);
 
-	printf("Wahr für:\n");
+	wwb=new_wwb();
+	verifiable=formula_is_verifiable_dpll(old,wwb);
+	if( verifiable ){
+		printf("Wahr für:\n");
+		print_wwb(wwb);
+	}else{
+		printf("Widerspruch\n");
+	}
+
+	oldWwb=wwb;
 	wwb=wwb_from_formula(old);
+	wwb_copy_to(oldWwb,wwb);
 
 	out=(char *) malloc(sizeof(char)*100);
 	wwb_to_row_head_string(wwb,out);
-	printf("%s\n",out);
+	printf("\n%s\n",out);
 	free(out);
 
 	while( !carry ){
 		oldWwb=wwb;
-		if( eval_formula(old,wwb) ){
-			/*print_wwb(wwb);
-			printf("\n");*/
+		if( formula_evaluate(old,wwb) ){
 			out=(char *) malloc(sizeof(char)*100);
 			wwb_to_row_string(wwb,out);
 			printf("%s\n",out);

@@ -135,6 +135,14 @@ formula* simplify(formula* form){
 				}
 				it=junction_iterator_next(it);
 			}
+			if( result->data.junction.size == 0 ){
+				free_formula(result);
+				if( form->data.junction.junctor==AND ){
+					return new_constant_formula(1);
+				}else{
+					return new_constant_formula(0);
+				}
+			}
 			return result;
 	}
 	return new_constant_formula(0);
