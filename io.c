@@ -132,3 +132,8 @@ int formula_to_string(formula* form,char *out){
 	}
 	return 0;
 }
+void print_form(formula* form){
+	char * out=(char *)malloc(formula_required_string_length(form));
+	formula_to_string(form,out);
+	printf("%s",out);
+}

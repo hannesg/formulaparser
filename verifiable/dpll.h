@@ -10,6 +10,8 @@
 
 #include "../formula.h"
 
+#include "../nf.h"
+
 #include "../wwb.h"
 
 int formula_is_verifiable_dpll(formula * form,wwb* w);

@@ -16,7 +16,7 @@ int main(int argc,char ** argv){
 	wwb* wwb,* oldWwb;
 	char *out;
 	int verifiable=0,carry=0;
-	char *example="(A2+(A1=A3)+-(A0*A4))";
+	char *example="(A0*(A0>(A1+A3))*((A0*A3)>A1)*(-A1+A2)*(-A1+-A2))";
 
 	if( argc == 1 ){
 		printf("Benutzung: %s <formel>\n",argv[0]);

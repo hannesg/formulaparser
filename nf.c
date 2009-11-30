@@ -125,7 +125,7 @@ int junction_contains_only_literals(formula* junction){
 
 void junction_append(formula* junction,formula* append){
 	junctionIterator it;
-	if( append->type != JUNCTION ){
+	if( append->type != JUNCTION || junction->data.junction.junctor != append->data.junction.junctor ){
 		add_formula_to_junction(
 				junction,
 				clone_formula(append)
@@ -194,12 +194,11 @@ formula * distribute_junction(formula* junction,formula *form,junctor innerJunct
 		inner=junction_iterator_formula(it);
 		if( inner->type == JUNCTION && inner->data.junction.junctor==innerJunctor){
 			temp=clone_formula(inner);
-			add_formula_to_junction(temp,clone_formula(form));
 		}else{
 			temp=new_junction_formula(innerJunctor);
 			add_formula_to_junction(temp,clone_formula(inner));
-			add_formula_to_junction(temp,clone_formula(form));
 		}
+		junction_append(temp,form);
 		add_formula_to_junction(result,temp);
 		it=junction_iterator_next(it);
 	}
@@ -239,7 +238,7 @@ formula *nf(formula *form,junctor junctor){
 						form
 				);
 				return result;
-			}else{// oh no!
+			}else{ // oh no!
 				it=junction_iterator_get(form);
 				result=new_junction_formula(junctor);
 				while( junction_iterator_valid(it) ){

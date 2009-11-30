@@ -1,14 +1,6 @@
 
 #include "dpll.h"
 
-int formula_is_verifiable_dpll(formula * form,wwb* w){
-	int result;
-	form=knf(form);
-	result=formula_is_verifiable_dpll_helper(form,w);
-	free_formula(form);
-	return result;
-}
-
 int formula_is_verifiable_dpll_helper(formula * form,wwb* w){
 	formula *inner,*formAlt;
 	junctionIterator it;
@@ -92,4 +84,18 @@ int formula_is_verifiable_dpll_helper(formula * form,wwb* w){
 		value++;
 	}
 	return 0;
+}
+
+int formula_is_verifiable_dpll(formula * form,wwb* w){
+	int result;
+	formula* unabbr=remove_abbreviations(form);
+	form=knf(unabbr);
+	print_form(unabbr);
+	printf("\n");
+	print_form(form);
+	printf("\n");
+	result=formula_is_verifiable_dpll_helper(form,w);
+	free_formula(form);
+	free_formula(unabbr);
+	return result;
 }

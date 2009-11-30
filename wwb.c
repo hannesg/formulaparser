@@ -222,6 +222,7 @@ formula* formula_evaluate_partially(formula * form,wwb * wwb){
 			}
 			return result;
 	}
+	return new_constant_formula(0);
 }
 
 wwb* wwb_successor(wwb *w,int *carry){
