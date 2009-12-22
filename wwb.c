@@ -267,3 +267,10 @@ void wwb_copy_to(wwb* from,wwb* to){
 		wwb_copy_to(from->right,to);
 	}
 }
+void wwb_copy_to_and_lock(wwb* from,wwb* to){
+	if( is_wwb(from) ){
+		wwb_set_with_lock(to,from->variable,from->value,1);
+		wwb_copy_to_and_lock(from->left,to);
+		wwb_copy_to_and_lock(from->right,to);
+	}
+}

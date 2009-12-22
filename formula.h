@@ -16,9 +16,9 @@ typedef enum _formulaType {CONSTANT,VARIABLE,NEGATION,JUNCTION} formulaType;
 
 typedef enum _junctor {OR='+',AND='*',EQUIVALENT='=',IMPLICATION='>',XOR='|'} junctor;
 
-typedef int variable;
+typedef unsigned int variable;
 
-typedef char constant;
+typedef unsigned char constant;
 
 typedef struct _negation{
 	formula* inner;
@@ -36,7 +36,7 @@ struct _junctionPart{
 typedef struct _junction{
 	junctionPart* part;
 	junctionPart* end;
-	char size;
+	unsigned char size;
 	junctor junctor;
 } junction;
 
@@ -77,9 +77,9 @@ junctor get_junctor(char str);
 
 char is_valid_junctor(junctor j);
 
-int compare_formula(formula* a,formula* b);
+unsigned int compare_formula(formula* a,formula* b);
 
-int junction_contains(formula* junction,formula* needle);
+unsigned int junction_contains(formula* junction,formula* needle);
 
 void free_junction_parts(formula *form);
 

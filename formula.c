@@ -121,7 +121,7 @@ char is_valid_junctor(junctor j){
 	}
 	return 0;
 }
-int junction_contains(formula* junction,formula* needle){
+unsigned int junction_contains(formula* junction,formula* needle){
 	junctionIterator it=junction_iterator_get(junction);
 	while( junction_iterator_valid(it) ){
 		if( compare_formula(needle,junction_iterator_formula(it)) ){
@@ -132,7 +132,7 @@ int junction_contains(formula* junction,formula* needle){
 	return 0;
 }
 
-int compare_formula(formula* a,formula* b){
+unsigned int compare_formula(formula* a,formula* b){
 	junctionIterator it;
 	if( a->type != b->type ){
 		return 0;

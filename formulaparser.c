@@ -7,8 +7,13 @@
 
 #include "io/simplify.h"
 #include "io/wwb.h"
+#include "io/openoffice.h"
 
 #include "verifiable/dpll.h"
+
+#include "verifiable/bf.h"
+
+void (*print_format)(formula * form)=&print_form_openoffice;
 
 int main(int argc,char ** argv){
 	formula *current,*old;
@@ -16,7 +21,7 @@ int main(int argc,char ** argv){
 	wwb* wwb,* oldWwb;
 	char *out;
 	int verifiable=0,carry=0;
-	char *example="(A0*(A0>(A1+A3))*((A0*A3)>A1)*(-A1+A2)*(-A1+-A2))";
+	char *example="((A0*A1*-A2)+(A0*A3*-A1*A2)+(A0*-A0*A3*A2)+(A0*-A3*A2)+(A0*A4*-A5))";//"(A0*(A0>(A1+A3))*((A0*A3)>A1)*(-A1+A2)*(-A1+-A2))";
 
 	if( argc == 1 ){
 		printf("Benutzung: %s <formel>\n",argv[0]);
@@ -40,29 +45,34 @@ int main(int argc,char ** argv){
 	current=remove_abbreviations(old);
 	free(old);
 	printf("Ohne Abkürzungen: ");
-	print_simplified(current);
+	print_format(current);
 	printf("\n");
 	old=current;
 
 	current=nnf(old);
 	printf("NNF: ");
-	print_simplified(current);
+	print_format(current);
 	printf("\n");
 	free_formula(current);
 
-	current=dnf(old);
+/*	current=dnf(old);
 	printf("DNF: ");
-	print_simplified(current);
+	print_format(current);
 	printf("\n");
 	free_formula(current);
 
 	current=knf(old);
 	printf("KNF: ");
-	print_simplified(current);
+	print_format(current);
 	printf("\n");
-	free_formula(current);
+	free_formula(current);*/
+
+	wwb=wwb_from_formula(old);
+
+	is_verifiable_bf(old,wwb);
 
 	wwb=new_wwb();
+
 	verifiable=formula_is_verifiable_dpll(old,wwb);
 	if( verifiable ){
 		printf("Wahr für:\n");

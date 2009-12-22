@@ -48,4 +48,6 @@ wwb* wwb_successor(wwb *w,int *carry);
 
 void wwb_copy_to(wwb* from,wwb* to);
 
+void wwb_copy_to_and_lock(wwb* from,wwb* to);
+
 #endif /* WWB_H_ */
