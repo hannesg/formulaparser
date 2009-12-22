@@ -11,7 +11,7 @@
 
 #include "bf.h"
 
-void * is_verifiable_bf_thread(void *threadParams){
+void *is_verifiable_bf_thread(void *threadParams){
 
 	bruteForceParams *params=(bruteForceParams *) threadParams;
 	wwb *wwb,*oldWwb;
@@ -24,7 +24,6 @@ void * is_verifiable_bf_thread(void *threadParams){
 		usleep(1);
 		oldWwb=wwb;
 		if( formula_evaluate(form,wwb) ){
-			printf("found!\n");
 			if( findAll ){
 				wwb_list_append(list,clone_wwb(wwb));
 			}else{
@@ -49,16 +48,16 @@ bruteForceParams *new_brute_force_params(formula *form,wwb *baseWwb,int findAll)
 	return result;
 }
 
-int is_verifiable_bf(formula *form,wwb *baseWwb){
+wwbList *is_verifiable_bf(formula *form,wwb *baseWwb){
 	pthread_t *thread;
 	bruteForceParams **params;
 	int num=0,vars=1;
 	wwb *extract;
 	int threads=(int) pow(2,vars);
+	wwbList *result=new_wwb_list();
 
 	thread=(pthread_t *)malloc(sizeof(pthread_t)*threads);
 	params=(bruteForceParams **)malloc(sizeof(bruteForceParams*)*threads);
-
 
 	while( num < threads ){
 		extract=clone_wwb(baseWwb);
@@ -68,15 +67,16 @@ int is_verifiable_bf(formula *form,wwb *baseWwb){
 		num++;
 	}
 
-
-	usleep(1000);
-
 	num=0;
 
 	while( num < threads ){
 		pthread_join(thread[num],NULL);
+		wwb_list_copy_to(params[num]->wwbs,result);
+		free_wwb_list(params[num]->wwbs);
+		free_wwb(params[num]->baseWwb);
+		free(params[num]);
 		num++;
 	}
 
-	return 0;
+	return result;
 }

@@ -10,6 +10,7 @@
 
 #include <pthread.h>
 #include <semaphore.h>
+#include <math.h>
 
 #include "../formula.h"
 #include "../wwb.h"
@@ -27,7 +28,7 @@ typedef struct _bruteForceParams {
 
 void* is_verifiable_bf_thread(void *threadParams);
 
-int is_verifiable_bf(formula *form,wwb *baseWwb);
+wwbList *is_verifiable_bf(formula *form,wwb *baseWwb);
 
 
 #endif /* BF_H_ */

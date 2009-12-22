@@ -13,12 +13,14 @@
 
 #include "verifiable/bf.h"
 
-void (*print_format)(formula * form)=&print_form_openoffice;
+void (*print_format)(formula * form)=&print_form;
 
 int main(int argc,char ** argv){
 	formula *current,*old;
 	parserResult *result;
 	wwb* wwb,* oldWwb;
+	wwbList* list;
+	wwbListIterator it;
 	char *out;
 	int verifiable=0,carry=0;
 	char *example="((A0*A1*-A2)+(A0*A3*-A1*A2)+(A0*-A0*A3*A2)+(A0*-A3*A2)+(A0*A4*-A5))";//"(A0*(A0>(A1+A3))*((A0*A3)>A1)*(-A1+A2)*(-A1+-A2))";
@@ -69,7 +71,21 @@ int main(int argc,char ** argv){
 
 	wwb=wwb_from_formula(old);
 
-	is_verifiable_bf(old,wwb);
+	list=is_verifiable_bf(old,wwb);
+	it=wwb_list_iterator_get(list);
+
+	out=(char *) malloc(sizeof(char)*100);
+	wwb_to_row_head_string(wwb,out);
+	printf("\n%s\n",out);
+	free(out);
+
+	while( wwb_list_iterator_valid(it) ){
+		out=(char *) malloc(sizeof(char)*100);
+		wwb_to_row_string(wwb_list_iterator_wbb(it),out);
+		printf("%s\n",out);
+		free(out);
+		it=wwb_list_iterator_next(it);
+	}
 
 	wwb=new_wwb();
 
